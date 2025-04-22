@@ -4,7 +4,7 @@ module "cluster" {
 
   namespace             = local.namespace
   vpc_id                = module.networking.vpc_id
-  ecs_subnets           = module.networking.private_subnets
+  ecs_subnets           = module.networking.private_subnet_ids
   security_groups       = [aws_security_group.ecs.id]
   default_instance_type = "m5a.large"
   instance_types = {
@@ -31,15 +31,15 @@ module "cluster" {
 resource "aws_security_group" "ecs" {
   name        = "${local.namespace}-ecs"
   description = "Inbound Security Group attached to the ECS Service (${var.env})"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
-  ingress {
-    description     = "Load balancer traffic"
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    security_groups = [aws_security_group.lb.id]
-  }
+  # ingress {
+  #   description     = "Load balancer traffic"
+  #   from_port       = 80
+  #   to_port         = 80
+  #   protocol        = "tcp"
+  #   security_groups = [aws_security_group.lb.id]
+  # }
 
   ingress {
     description = "Internal traffic"
