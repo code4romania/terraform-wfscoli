@@ -7,4 +7,12 @@ terraform {
       version = "~> 5.95"
     }
   }
+
+  cloud {
+    organization = "code4romania"
+
+    workspaces {
+      project = "wfscoli"
+    }
+  }
 }
