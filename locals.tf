@@ -1,3 +1,3 @@
 locals {
-  namespace = "wfscoli-${var.env}"
+  namespace = "${var.subdomain}-wfscoli-${var.env}"
 }
