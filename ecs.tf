@@ -26,6 +26,8 @@ module "cluster" {
 
   spot_allocation_strategy = "price-capacity-optimized"
   spot_instance_pools      = 0
+
+  service_discovery_domain = "${var.subdomain}.wfscoli.svc"
 }
 
 resource "aws_security_group" "ecs" {
