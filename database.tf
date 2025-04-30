@@ -7,7 +7,6 @@ resource "aws_db_instance" "main" {
 
   username = "postgres"
   password = random_password.database.result
-  port     = 3306
 
   iam_database_authentication_enabled = true
 
