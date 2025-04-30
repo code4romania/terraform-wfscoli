@@ -6,7 +6,7 @@ resource "aws_db_instance" "main" {
   deletion_protection = true
   monitoring_interval = 60
 
-  availability_zone = local.availability_zone
+  # availability_zone = local.availability_zone
 
   username = "postgres"
   password = random_password.database.result
