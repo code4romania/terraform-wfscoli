@@ -13,43 +13,53 @@ async function createAuthToken() {
     return await signer.getAuthToken();
 }
 
-async function create(database) {
-    // Obtain auth token
-    const token = await createAuthToken();
-
-    const client = new Client({
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USERNAME,
-        password: token,
-        ssl: awsCaBundle,
-    });
-
-    const query = {
-        text: `CREATE DATABASE $1`,
-        values: [database]
+function success(message) {
+    return {
+        success: true,
+        message: message,
     };
-
-    client.connect()
-        .then(() => {
-            console.log(`Connected to ${client.host}:${client.port}`);
-
-            client.query(query, (err, res) => {
-                if (err) {
-                    console.error(`Error creating database ${database}`, err);
-                } else {
-                    console.log(`Database ${database} created successfully.`);
-                }
-
-                client.end();
-            });
-        })
-        .catch((err) => {
-            console.error(`Error connecting to ${client.host}:${client.port}`, err);
-        });
 }
 
-export const handler = async (event) => {
-    console.log("Event: ", event);
-};
+function error(message, context = null) {
+    return {
+        success: false,
+        error: message,
+        context: context,
+    };
+}
 
+export const handler = async ({ database }) => {
+      const token = await createAuthToken();
+
+      const client = new Client({
+          host: process.env.DB_HOST,
+          port: process.env.DB_PORT,
+          user: process.env.DB_USERNAME,
+          password: token,
+          ssl: awsCaBundle,
+      });
+
+      const query = {
+          text: `CREATE DATABASE $1`,
+          values: [database]
+      };
+
+      return client.connect()
+          .then(() => {
+              console.log(`Connected to ${client.host}:${client.port}`);
+
+              client.query(query, (err, res) => {
+                  if (err) {
+                      return error(`Error creating database ${database}`, err);
+                  } else {
+                      return success(`Database ${database} created successfully.`);
+                  }
+              })
+              .then(() => {
+                  client.end();
+              });
+          })
+          .catch((err) => {
+             return error(`Error connecting to ${client.host}:${client.port}`, err);
+          });
+};
