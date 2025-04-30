@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "aws-ssl-profiles": "^1.1.2",
+    "pg": "^8.15.6"
+  }
+}

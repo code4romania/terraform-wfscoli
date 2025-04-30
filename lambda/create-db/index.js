@@ -1,0 +1,55 @@
+import { Signer } from "@aws-sdk/rds-signer";
+import awsCaBundle from 'aws-ssl-profiles';
+import { Client } from 'pg';
+
+async function createAuthToken() {
+    const signer = new Signer({
+        hostname: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        username: process.env.DB_USERNAME,
+        region: process.env.AWS_REGION,
+    });
+
+    return await signer.getAuthToken();
+}
+
+async function create(database) {
+    // Obtain auth token
+    const token = await createAuthToken();
+
+    const client = new Client({
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USERNAME,
+        password: token,
+        ssl: awsCaBundle,
+    });
+
+    const query = {
+        text: `CREATE DATABASE $1`,
+        values: [database]
+    };
+
+    client.connect()
+        .then(() => {
+            console.log(`Connected to ${client.host}:${client.port}`);
+
+            client.query(query, (err, res) => {
+                if (err) {
+                    console.error(`Error creating database ${database}`, err);
+                } else {
+                    console.log(`Database ${database} created successfully.`);
+                }
+
+                client.end();
+            });
+        })
+        .catch((err) => {
+            console.error(`Error connecting to ${client.host}:${client.port}`, err);
+        });
+}
+
+export const handler = async (event) => {
+    console.log("Event: ", event);
+};
+
