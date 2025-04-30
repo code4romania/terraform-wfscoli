@@ -21,10 +21,9 @@ resource "aws_lambda_function" "create_database" {
 
   environment {
     variables = {
-      DB_HOST    = "${aws_db_instance.main.address}"
-      DB_PORT    = "${aws_db_instance.main.port}"
-      DB_NAME    = "${aws_db_instance.main.username}"
-      AWS_REGION = "${data.aws_region.current.id}"
+      DB_HOST = "${aws_db_instance.main.address}"
+      DB_PORT = "${aws_db_instance.main.port}"
+      DB_NAME = "${aws_db_instance.main.username}"
     }
   }
 }
