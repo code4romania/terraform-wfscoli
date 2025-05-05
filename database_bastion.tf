@@ -54,7 +54,7 @@ resource "aws_instance" "bastion" {
 resource "aws_security_group" "bastion" {
   name        = "${local.namespace}-bastion"
   description = "Inbound - Security Group attached to the bastion instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   ingress {
     from_port   = 22
