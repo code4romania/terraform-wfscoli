@@ -78,6 +78,15 @@ data "aws_iam_policy_document" "lambda_create_database" {
 
     resources = ["*"]
   }
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+
+    resources = [
+      aws_secretsmanager_secret.rds.arn,
+    ]
+  }
 }
 
 resource "aws_security_group" "lambda_create_database" {

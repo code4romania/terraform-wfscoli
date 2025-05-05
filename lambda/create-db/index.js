@@ -1,5 +1,5 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
-import { awsCaBundle } from 'aws-ssl-profiles';
+import awsCaBundle from 'aws-ssl-profiles';
 import postgres from 'postgres';
 
 const getSecretValue = async (SecretId) => {
@@ -20,12 +20,16 @@ const getSecretValue = async (SecretId) => {
 
 
 export const handler = async ({ database }) => {
+    const credentials = await getSecretValue(process.env.SECRET_NAME);
+
     const sql = postgres({
-        ...await getSecretValue(process.env.SECRET_NAME),
+        ...credentials,
         ssl: awsCaBundle,
     });
 
-    const query = await sql` CREATE DATABASE ${sql(database)}`;
+    const query = await sql`
+        CREATE DATABASE ${sql(database)}
+    `;
 
     return query;
 };
