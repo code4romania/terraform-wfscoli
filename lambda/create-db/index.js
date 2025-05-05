@@ -1,65 +1,31 @@
-import { Signer } from "@aws-sdk/rds-signer";
-import awsCaBundle from 'aws-ssl-profiles';
-import { Client } from 'pg';
+import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
+import { awsCaBundle } from 'aws-ssl-profiles';
+import postgres from 'postgres';
 
-async function createAuthToken() {
-    const signer = new Signer({
-        hostname: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        username: process.env.DB_USERNAME,
-        region: process.env.AWS_REGION,
-    });
+const getSecretValue = async (SecretId) => {
+    const client = new SecretsManagerClient();
+    const response = await client.send(
+        new GetSecretValueCommand({
+            SecretId: SecretId,
+        }),
+    );
 
-    return await signer.getAuthToken();
-}
+    try {
+        return JSON.parse(response.SecretString);
+    } catch (err) {
+        console.error('Error getting secret value', err);
+        throw new Error(`Error getting secret value: ${err.message}`);
+    }
+};
 
-function success(message) {
-    return {
-        success: true,
-        message: message,
-    };
-}
-
-function error(message, context = null) {
-    return {
-        success: false,
-        error: message,
-        context: context,
-    };
-}
 
 export const handler = async ({ database }) => {
-      const token = await createAuthToken();
+    const sql = postgres({
+        ...await getSecretValue(process.env.SECRET_NAME),
+        ssl: awsCaBundle,
+    });
 
-      const client = new Client({
-          host: process.env.DB_HOST,
-          port: process.env.DB_PORT,
-          user: process.env.DB_USERNAME,
-          password: token,
-          ssl: awsCaBundle,
-      });
+    const query = await sql` CREATE DATABASE ${sql(database)}`;
 
-      const query = {
-          text: `CREATE DATABASE $1`,
-          values: [database]
-      };
-
-      return client.connect()
-          .then(() => {
-              console.log(`Connected to ${client.host}:${client.port}`);
-
-              client.query(query, (err, res) => {
-                  if (err) {
-                      return error(`Error creating database ${database}`, err);
-                  } else {
-                      return success(`Database ${database} created successfully.`);
-                  }
-              })
-              .then(() => {
-                  client.end();
-              });
-          })
-          .catch((err) => {
-             return error(`Error connecting to ${client.host}:${client.port}`, err);
-          });
+    return query;
 };
