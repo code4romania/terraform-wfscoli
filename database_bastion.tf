@@ -25,8 +25,8 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address = true
   source_dest_check           = false
 
-  subnet_id              = aws_subnet.public.0.id
-  private_ip             = cidrhost(aws_subnet.public.0.cidr_block, 20)
+  subnet_id              = module.networking.public_subnet_ids.0
+  private_ip             = cidrhost(module.networking.public_cidr_blocks[0], 20)
   vpc_security_group_ids = [aws_security_group.bastion.id]
 
   key_name = aws_key_pair.bastion.key_name
