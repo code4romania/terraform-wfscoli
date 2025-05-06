@@ -42,30 +42,14 @@ data "aws_iam_policy_document" "lambda_create_database_assume_role_policy" {
   }
 }
 
-
-resource "aws_iam_role_policy" "lambda_create_database_role" {
-  name   = "rds-access"
+# VPC
+resource "aws_iam_role_policy" "lambda_create_database_vpc" {
+  name   = "vpc"
   role   = aws_iam_role.lambda_create_database.id
-  policy = data.aws_iam_policy_document.lambda_create_database.json
+  policy = data.aws_iam_policy_document.lambda_create_database_vpc.json
 }
 
-data "aws_iam_policy_document" "lambda_create_database" {
-  statement {
-    actions = [
-      "rds-db:connect",
-    ]
-
-    resources = [
-      format(
-        "arn:aws:rds-db:%s:%s:dbuser:%s/%s",
-        data.aws_region.current.id,
-        data.aws_caller_identity.current.account_id,
-        aws_db_instance.main.resource_id,
-        aws_db_instance.main.username
-      ),
-    ]
-  }
-
+data "aws_iam_policy_document" "lambda_create_database_vpc" {
   statement {
     // https://repost.aws/questions/QUbx7pdp-qTWWOiUb-WtEhFQ/resource-handler-returned-message-the-provided-execution-role-does-not-have-permissions-to-call-createnetworkinterface-on-ec2-service-lambda-status-code-400#AN5NU5MnorS1qSiMeGACMVlw
     actions = [
@@ -78,6 +62,16 @@ data "aws_iam_policy_document" "lambda_create_database" {
 
     resources = ["*"]
   }
+}
+
+# Secrets Manager
+resource "aws_iam_role_policy" "lambda_create_database_secrets_manager" {
+  name   = "rds-access"
+  role   = aws_iam_role.lambda_create_database.id
+  policy = data.aws_iam_policy_document.lambda_create_database_secrets_manager.json
+}
+
+data "aws_iam_policy_document" "lambda_create_database_secrets_manager" {
   statement {
     actions = [
       "secretsmanager:GetSecretValue",
@@ -89,10 +83,23 @@ data "aws_iam_policy_document" "lambda_create_database" {
   }
 }
 
+# Logs
+resource "aws_iam_role_policy_attachment" "lambda_create_database_logs" {
+  role       = aws_iam_role.lambda_create_database.id
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 resource "aws_security_group" "lambda_create_database" {
   name        = "${local.namespace}-lambda-create-database"
   description = "Outbound security group attached to the create database lambda"
   vpc_id      = module.networking.vpc_id
+
+  egress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port   = 5432

@@ -1,35 +1,54 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 import awsCaBundle from 'aws-ssl-profiles';
-import postgres from 'postgres';
+import { Client } from 'pg';
 
 const getSecretValue = async (SecretId) => {
-    const client = new SecretsManagerClient();
-    const response = await client.send(
-        new GetSecretValueCommand({
-            SecretId: SecretId,
-        }),
-    );
-
     try {
+        const client = new SecretsManagerClient();
+
+        const response = await client.send(
+            new GetSecretValueCommand({
+                SecretId: SecretId,
+            }),
+        );
+
         return JSON.parse(response.SecretString);
-    } catch (err) {
-        console.error('Error getting secret value', err);
-        throw new Error(`Error getting secret value: ${err.message}`);
+    } catch (error) {
+        console.error(error.message);
+        return null;
     }
 };
 
-
-export const handler = async ({ database }) => {
+export const handler = async ({ database }, context) => {
     const credentials = await getSecretValue(process.env.SECRET_NAME);
 
-    const sql = postgres({
-        ...credentials,
+    if (!credentials) {
+        return context.logStreamName;
+    };
+
+    const client = new Client({
+        host: credentials.host,
+        port: credentials.port,
+        user: credentials.username,
+        password: credentials.password,
         ssl: awsCaBundle,
     });
 
-    const query = await sql`
-        CREATE DATABASE ${sql(database)}
-    `;
+    if (!client) {
+        return context.logStreamName;
+    };
 
-    return query;
+    try {
+        await client.connect();
+
+        await client.query(`CREATE DATABASE "${database}"`);
+
+        console.info(`Successfully created "${database}" database.`);
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        client.end();
+
+        return context.logStreamName;
+    }
 };
