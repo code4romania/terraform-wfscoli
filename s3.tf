@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "s3_cloudfront_media" {
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
-      values   = [aws_cloudfront_distribution.media_distribution.arn]
+      values   = [aws_cloudfront_distribution.media.arn]
     }
   }
 }

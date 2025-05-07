@@ -1,4 +1,4 @@
-resource "aws_cloudfront_distribution" "media_distribution" {
+resource "aws_cloudfront_distribution" "media" {
   comment         = "Media for ${local.namespace}"
   price_class     = "PriceClass_100"
   enabled         = true
