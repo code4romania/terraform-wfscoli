@@ -22,7 +22,7 @@ resource "aws_s3_bucket_cors_configuration" "s3_media" {
 data "aws_iam_policy_document" "s3_cloudfront_media" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["${module.s3_public.arn}/*"]
+    resources = ["${module.s3_media.arn}/*"]
 
     principals {
       type        = "Service"
@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "s3_cloudfront_media" {
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
-      values   = [aws_cloudfront_distribution.main.arn]
+      values   = [aws_cloudfront_distribution.media_distribution.arn]
     }
   }
 }
