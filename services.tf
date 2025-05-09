@@ -1,6 +1,6 @@
 module "wfservice" {
   source  = "code4romania/ecs-service-wfscoli/aws"
-  version = "0.1.3"
+  version = "0.1.4"
 
   count    = length(local.services)
   name     = local.services[count.index].name
