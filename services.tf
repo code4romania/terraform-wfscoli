@@ -19,9 +19,9 @@ module "scoala-nr-1-test" {
     }
 
     ecs_cluster = {
-      cluster_name                   = module.ecs.cluster_name
-      log_group_name                 = module.ecs.log_group_name
-      service_discovery_namespace_id = module.ecs.service_discovery_namespace_id
+      cluster_name                   = module.cluster.cluster_name
+      log_group_name                 = module.cluster.log_group_name
+      service_discovery_namespace_id = module.cluster.service_discovery_namespace_id
       security_groups                = [aws_security_group.ecs.id]
       network_subnets                = module.networking.private_subnet_ids
     }
