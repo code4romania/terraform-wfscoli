@@ -17,7 +17,7 @@ resource "aws_route53_record" "media_ipv4" {
 
 # Cloudfront AAAA record
 resource "aws_route53_record" "media_ipv6" {
-  zone_id = data.aws_route53_zone.main.zone_id
+  zone_id = aws_route53_zone.main.zone_id
   name    = "media"
   type    = "AAAA"
 
