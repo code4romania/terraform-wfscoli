@@ -2,8 +2,7 @@ module "wfservice" {
   source  = "code4romania/ecs-service-wfscoli/aws"
   version = "0.1.1"
 
-  for_each = local.services
-
+  for_each = toset(local.services)
   name     = each.name
   hostname = try(each.value.hostname, null)
 
