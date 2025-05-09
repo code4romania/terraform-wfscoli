@@ -1,11 +1,14 @@
-module "scoala-nr-1-test" {
+module "wfservice" {
   source  = "code4romania/ecs-service-wfscoli/aws"
-  version = "0.1.0"
+  version = "0.1.1"
 
-  name = "scoala-nr-1-test"
+  for_each = locals.services
+
+  name     = each.name
+  hostname = try(each.value.hostname, null)
 
   common = {
-    image_tag                     = "1.10.5"
+    image_tag                     = local.image_tag
     namespace                     = local.namespace
     env                           = var.env
     rds_secrets_arn               = aws_secretsmanager_secret.rds.arn
@@ -15,7 +18,7 @@ module "scoala-nr-1-test" {
     media = {
       s3_bucket_name = module.s3_media.bucket
       s3_bucket_arn  = module.s3_media.arn
-      cloudfront_url = aws_cloudfront_distribution.media.domain_name
+      cloudfront_url = local.media_domain_name
     }
 
     ecs_cluster = {
