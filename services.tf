@@ -1,6 +1,6 @@
 module "wfservice" {
   source  = "code4romania/ecs-service-wfscoli/aws"
-  version = "0.1.2"
+  version = "0.1.3"
 
   count    = length(local.services)
   name     = local.services[count.index].name
@@ -20,10 +20,16 @@ module "wfservice" {
       cloudfront_url = local.media_domain_name
     }
 
+    service_discovery = {
+      namespace_id = module.cluster.service_discovery_namespace_id
+      arn          = module.cluster.service_discovery_arn
+    }
+
     ecs_cluster = {
       cluster_name                   = module.cluster.cluster_name
       log_group_name                 = module.cluster.log_group_name
       service_discovery_namespace_id = module.cluster.service_discovery_namespace_id
+      vpc_id                         = module.networking.vpc_id
       security_groups                = [aws_security_group.ecs.id]
       network_subnets                = module.networking.private_subnet_ids
     }
