@@ -2,9 +2,9 @@ module "wfservice" {
   source  = "code4romania/ecs-service-wfscoli/aws"
   version = "0.1.1"
 
-  for_each = toset(local.services)
-  name     = each.name
-  hostname = try(each.value.hostname, null)
+  count    = length(local.services)
+  name     = local.services[count.index].name
+  hostname = try(local.services[count.index].hostname, null)
 
   common = {
     image_tag                     = local.image_tag
