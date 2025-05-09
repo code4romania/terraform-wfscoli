@@ -1,6 +1,6 @@
 module "cluster" {
   source  = "code4romania/ecs-cluster/aws"
-  version = "0.1.4"
+  version = "0.1.5"
 
   namespace             = local.namespace
   vpc_id                = module.networking.vpc_id
