@@ -7,7 +7,7 @@ module "networking" {
 
 resource "aws_apigatewayv2_vpc_link" "main" {
   name               = "${local.namespace}-vpc-link"
-  security_group_ids = [aws_security_group.gateway_vpclink.id]
+  security_group_ids = [aws_security_group.gateway_vpc_link.id]
   subnet_ids         = module.networking.private_subnet_ids
 }
 
