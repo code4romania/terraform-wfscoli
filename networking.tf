@@ -14,7 +14,7 @@ resource "aws_apigatewayv2_vpc_link" "main" {
 resource "aws_security_group" "gateway_vpc_link" {
   name        = "${local.namespace}-gateway-vpc-link"
   description = "Security group for API Gateway VPC Link"
-  vpc_id      = var.common.ecs_cluster.vpc_id
+  vpc_id      = module.networking.vpc_id
 
   ingress {
     from_port   = 80
