@@ -16,13 +16,6 @@ resource "aws_security_group" "gateway_vpc_link" {
   description = "Security group for API Gateway VPC Link"
   vpc_id      = module.networking.vpc_id
 
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
     from_port       = 80
     to_port         = 80
