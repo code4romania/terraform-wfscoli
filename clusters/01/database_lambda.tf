@@ -1,7 +1,7 @@
 data "archive_file" "lambda_create_database" {
   type        = "zip"
-  source_dir  = "${path.module}/lambda/create-db"
-  output_path = "${path.module}/lambda/create-db.zip"
+  source_dir  = "${path.module}/../lambda/create-db"
+  output_path = "${path.module}/../lambda/create-db.zip"
 }
 
 resource "aws_lambda_function" "create_database" {

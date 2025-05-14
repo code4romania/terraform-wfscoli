@@ -1,5 +1,5 @@
 locals {
-  namespace         = "${var.subdomain}-wfscoli-${var.env}"
+  namespace         = "wfscoli-${var.subdomain}-${var.env}"
   image_tag         = "1.10.6"
   media_domain_name = "media.${aws_route53_zone.main.name}"
 
