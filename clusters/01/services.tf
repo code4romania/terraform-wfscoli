@@ -1,6 +1,6 @@
 module "wfservice" {
   source  = "code4romania/ecs-service-wfscoli/aws"
-  version = "0.1.11"
+  version = "0.1.12"
 
   count    = length(local.services)
   name     = local.services[count.index].name
@@ -26,7 +26,8 @@ module "wfservice" {
     }
 
     ecs_cluster = {
-      cluster_name                   = module.cluster.cluster_name
+      name                           = module.cluster.cluster_name
+      arn                            = module.cluster.cluster_arn
       log_group_name                 = module.cluster.log_group_name
       service_discovery_namespace_id = module.cluster.service_discovery_namespace_id
       vpc_id                         = module.networking.vpc_id
