@@ -44,6 +44,14 @@ resource "aws_security_group" "ecs" {
   # }
 
   ingress {
+    description     = "VPC link traffic"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.gateway_vpc_link.id]
+  }
+
+  ingress {
     description = "Internal traffic"
     from_port   = 0
     to_port     = 0
