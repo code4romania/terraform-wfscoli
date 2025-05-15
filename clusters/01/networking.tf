@@ -32,10 +32,11 @@ resource "aws_security_group" "gateway_vpc_link" {
 }
 
 resource "aws_security_group_rule" "allow_vpclink_to_ecs" {
+  description              = "VPC link traffic"
   type                     = "ingress"
-  from_port                = 0
-  to_port                  = 0
-  protocol                 = "-1"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
   security_group_id        = aws_security_group.ecs.id
   source_security_group_id = aws_security_group.gateway_vpc_link.id
 }
