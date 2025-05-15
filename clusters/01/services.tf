@@ -1,6 +1,6 @@
 module "wfservice" {
   source  = "code4romania/ecs-service-wfscoli/aws"
-  version = "0.1.12"
+  version = "0.1.13"
 
   count    = length(local.services)
   name     = local.services[count.index].name
@@ -33,6 +33,12 @@ module "wfservice" {
       vpc_id                         = module.networking.vpc_id
       security_groups                = [aws_security_group.ecs.id]
       network_subnets                = module.networking.private_subnet_ids
+    }
+
+    lb = {
+      dns_name     = aws_lb.main.dns_name
+      zone_id      = aws_lb.main.zone_id
+      listener_arn = aws_lb_listener.https.arn
     }
 
     apigateway_vpc_link_id = aws_apigatewayv2_vpc_link.main.id

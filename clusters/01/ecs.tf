@@ -35,13 +35,13 @@ resource "aws_security_group" "ecs" {
   description = "Inbound Security Group attached to the ECS Service (${var.env})"
   vpc_id      = module.networking.vpc_id
 
-  # ingress {
-  #   description     = "Load balancer traffic"
-  #   from_port       = 80
-  #   to_port         = 80
-  #   protocol        = "tcp"
-  #   security_groups = [aws_security_group.lb.id]
-  # }
+  ingress {
+    description     = "Load balancer traffic"
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.lb.id]
+  }
 
   ingress {
     description     = "VPC link traffic"
