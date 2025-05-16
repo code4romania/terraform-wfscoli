@@ -5,9 +5,27 @@ locals {
   image_tag = "1.11.1"
 
   services = [
+    # {
+    #   name = "school-name"
+    #   hostname = "school-name.ro"
+    # }
     {
-      name = "scoala-nr-1-test"
-      # hostname  =
-    }
+      name = "gpp-sf-agnes"
+    },
+    {
+      name = "sgn-balcescu-bacau"
+    },
+    {
+      name = "gpp-sbs-12"
+    },
+    {
+      name = "sg2-cernica-tanganu"
+    },
+    {
+      name = "sg-dragomiresti"
+    },
+    {
+      name = "gpp-pinochio"
+    },
   ]
 }
