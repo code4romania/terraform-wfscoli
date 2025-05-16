@@ -23,7 +23,7 @@ resource "aws_sesv2_configuration_set" "main" {
 
 # DMARC
 resource "aws_route53_record" "txt_dmarc" {
-  zone_id = aws_route53_zone.main.name
+  zone_id = aws_route53_zone.main.zone_id
   name    = "_dmarc.${aws_sesv2_email_identity.main.email_identity}"
   type    = "TXT"
   ttl     = "600"
@@ -38,7 +38,7 @@ resource "aws_sesv2_email_identity_mail_from_attributes" "main" {
 }
 
 resource "aws_route53_record" "mail_from_mx" {
-  zone_id = aws_route53_zone.main.name
+  zone_id = aws_route53_zone.main.zone_id
   name    = "mail.${aws_sesv2_email_identity.main.email_identity}"
   type    = "MX"
   ttl     = "300"
@@ -46,7 +46,7 @@ resource "aws_route53_record" "mail_from_mx" {
 }
 
 resource "aws_route53_record" "mail_from_spf" {
-  zone_id = aws_route53_zone.main.name
+  zone_id = aws_route53_zone.main.zone_id
   name    = "mail.${aws_sesv2_email_identity.main.email_identity}"
   type    = "TXT"
   ttl     = "300"
@@ -57,7 +57,7 @@ resource "aws_route53_record" "mail_from_spf" {
 # DKIM
 resource "aws_route53_record" "dkim" {
   count   = 3
-  zone_id = aws_route53_zone.main.name
+  zone_id = aws_route53_zone.main.zone_id
   name    = "${element(aws_sesv2_email_identity.main.dkim_signing_attributes[0].tokens, count.index)}._domainkey.${aws_sesv2_email_identity.main.email_identity}"
   type    = "CNAME"
   ttl     = "600"
