@@ -2,7 +2,7 @@ locals {
   namespace         = "wfscoli-${var.subdomain}-${var.env}"
   media_domain_name = "media.${aws_route53_zone.main.name}"
 
-  image_tag = "1.11.1"
+  image_tag = "1.11.2"
 
   services = [
     # {
