@@ -27,5 +27,8 @@ locals {
     {
       name = "gpp-pinochio"
     },
+    {
+      name = "sg18-galati"
+    },
   ]
 }
