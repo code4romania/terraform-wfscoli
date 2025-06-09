@@ -30,5 +30,8 @@ locals {
     {
       name = "sg18-galati"
     },
+    {
+      name = "sg-octavianvoicu-bacau"
+    },
   ]
 }
