@@ -33,5 +33,8 @@ locals {
     {
       name = "sg-octavianvoicu-bacau"
     },
+    {
+      name = "lt-mihailsadoveanu-chisinau"
+    },
   ]
 }
