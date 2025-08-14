@@ -12,12 +12,12 @@ module "cluster" {
     "m5.large"  = ""
   }
 
-  min_size                  = 1
+  min_size                  = 2
   max_size                  = 4
   minimum_scaling_step_size = 1
   maximum_scaling_step_size = 1
 
-  target_capacity                          = 90
+  target_capacity                          = 100
   capacity_rebalance                       = true
   on_demand_base_capacity                  = 0 # could be set to 1 for stability. consider savings plan
   on_demand_percentage_above_base_capacity = 100
