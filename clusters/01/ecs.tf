@@ -17,7 +17,7 @@ module "cluster" {
   minimum_scaling_step_size = 1
   maximum_scaling_step_size = 1
 
-  target_capacity                          = 100
+  target_capacity                          = 90
   capacity_rebalance                       = true
   on_demand_base_capacity                  = 0 # could be set to 1 for stability. consider savings plan
   on_demand_percentage_above_base_capacity = 100
