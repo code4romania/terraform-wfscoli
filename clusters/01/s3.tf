@@ -5,6 +5,8 @@ module "s3_media" {
   name              = local.namespace
   enable_versioning = var.env == "production"
   policy            = data.aws_iam_policy_document.s3_cloudfront_media.json
+
+  block_public_acls = false
 }
 
 resource "aws_s3_bucket_cors_configuration" "s3_media" {
