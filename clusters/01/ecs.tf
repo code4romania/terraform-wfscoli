@@ -12,7 +12,7 @@ module "cluster" {
     "m5.large"  = ""
   }
 
-  min_size                  = 1
+  min_size                  = 2
   max_size                  = 4
   minimum_scaling_step_size = 1
   maximum_scaling_step_size = 1
