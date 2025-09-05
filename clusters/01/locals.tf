@@ -36,5 +36,8 @@ locals {
     {
       name = "lt-mihailsadoveanu-chisinau"
     },
+    {
+      name = "sg-petrucomarnescu-gurahumorului"
+    },
   ]
 }
