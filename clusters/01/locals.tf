@@ -39,5 +39,8 @@ locals {
     {
       name = "sg-petrucomarnescu-gh"
     },
+    {
+      name = "sg-odaile"
+    }
   ]
 }
