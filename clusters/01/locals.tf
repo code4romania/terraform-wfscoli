@@ -41,6 +41,9 @@ locals {
     },
     {
       name = "sg-odaile"
-    }
+    },
+    {
+      name = "sg-branesti"
+    },
   ]
 }
