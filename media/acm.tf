@@ -2,7 +2,7 @@
 resource "aws_acm_certificate" "media" {
   provider                  = aws.acm
   validation_method         = "DNS"
-  domain_name               = aws_route53_zone.main.name
+  domain_name               = data.aws_route53_zone.main.name
   subject_alternative_names = [local.media_domain_name]
 
   lifecycle {
@@ -24,5 +24,5 @@ resource "aws_route53_record" "media_acm_validation" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.main.zone_id
+  zone_id         = data.aws_route53_zone.main.zone_id
 }

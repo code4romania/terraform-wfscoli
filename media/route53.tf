@@ -1,10 +1,10 @@
-resource "aws_route53_zone" "main" {
-  name = "${var.subdomain}.wfscoli.ro"
+data "aws_route53_zone" "main" {
+  name = "wfscoli.ro"
 }
 
 # Cloudfront
 resource "aws_route53_record" "media_ipv4" {
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = data.aws_route53_zone.main.zone_id
   name    = "media"
   type    = "A"
 
@@ -16,7 +16,7 @@ resource "aws_route53_record" "media_ipv4" {
 }
 
 resource "aws_route53_record" "media_ipv6" {
-  zone_id = aws_route53_zone.main.zone_id
+  zone_id = data.aws_route53_zone.main.zone_id
   name    = "media"
   type    = "AAAA"
 
