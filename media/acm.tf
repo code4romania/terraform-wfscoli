@@ -1,9 +1,8 @@
 # Cloudfront
 resource "aws_acm_certificate" "media" {
-  provider                  = aws.acm
-  validation_method         = "DNS"
-  domain_name               = data.aws_route53_zone.main.name
-  subject_alternative_names = [local.media_domain_name]
+  provider          = aws.acm
+  validation_method = "DNS"
+  domain_name       = local.media_domain_name
 
   lifecycle {
     create_before_destroy = true
